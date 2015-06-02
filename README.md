@@ -1,2 +1,9 @@
 # dotfiles
-Some UNIX config files inspired by cowboy/dotfiles. Trying to make it compatible to Windows + Cygwin
+Inspired by https://github.com/cowboy/dotfiles
+
+## TODO
+
+* Install scripts for
+  * python
+  * ruby
+* Make compatible to Windows with GitBash / Cygwin

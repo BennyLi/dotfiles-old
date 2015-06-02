@@ -1,0 +1,11 @@
+[core]
+	editor = vim
+[user]
+	name = Benny Li
+	email = EMAIL
+[alias]
+	l = log --graph --color --decorate --abbrev-commit --name-status --pretty=short
+	s = status
+	ls = log --graph --pretty=format:"%C(auto)%h%x20%C(cyan)%ad%Creset%C(auto)%d%x20%s%x20%x28%C(green)%aE%Creset%x29" --date=short
+	fr = !git fetch && git rebase
+	amend = commit -a --amend --no-edit

@@ -1,0 +1,2 @@
+#!/bin/sh
+"/c/Dev/GitTools/Python27/pythonw.exe" "/c/Dev/GitTools/Python27/lib/idlelib/idle.pyw" -e "$@"
