@@ -1,0 +1,2 @@
+#!/bin/sh
+"/p/PortableApps/AtomPortable/AtomPortable.exe" "$@"
