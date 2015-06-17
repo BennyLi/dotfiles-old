@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# PUT THIS FILE INTO ~/bin TO USE IT GLOBALLY IN YOUR GIT BASH!
+
+echo "Stopping Glassfish server..."
+asadmin stop-domain domain1

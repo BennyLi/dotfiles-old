@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function build_asadmin_path {
+  local cmd glassfish
+  glassfish=$(glassfishRoot "DOS")
+  cmd="${glassfish}bin\\asadmin.bat"
+  echo "$cmd"
+}
+
+cmd="$(build_asadmin_path)"
+
+echo "[CMD] \"set\" \"AS_ADMIN_READTIMEOUT=3600000\""
+comspec "set" "AS_ADMIN_READTIMEOUT=3600000"
+echo "[CMD] $cmd $@"
+comspec $cmd $@

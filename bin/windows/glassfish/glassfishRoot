@@ -1,0 +1,40 @@
+#!/bin/bash
+
+DEV_PATH="/c/DEV/"
+
+function glassfish_dir {
+  local branch glassfish
+  if [ $# -eq 1 ] && [ "$1" != "" ]; then
+    branch="$1"
+  else
+    branch="$(getBranch)"
+  fi
+
+  glassfish="glassfish"
+  if [ "$branch" == "master" ]; then
+    glassfish="$glassfish-2.2.0"
+  fi
+
+  echo "$glassfish"
+}
+
+function glassfish_version_path {
+  local gf_path gf_dir
+  gf_dir="$1"
+  gf_path="$DEV_PATH$gf_dir/"
+  echo "$(ls -d $gf_path*/ | grep -ve '.*_bak\/' | head -1)"
+}
+
+function conv_to_dos {
+  local path
+  path="$1"
+  echo "$(echo $path | sed 's/^\/\([a-zA-z]\)\//\1:\//g' | sed 's/\//\\/g')"
+}
+
+path=$(glassfish_version_path "$(glassfish_dir)")
+
+if [ $# -eq 1 ] && [ "$1" == "DOS" ]; then
+  conv_to_dos $path
+else
+  echo "$path"
+fi

@@ -3,8 +3,10 @@
 from xml.dom.minidom import parse
 import sys, os
 import subprocess
+from shlex import split
+import re
 
-DOMAIN_XML = 'c:\\DEV\\{0}\\3.1.2-6_H08\\glassfish\\domains\\domain1\\config\\domain.xml'
+DOMAIN_XML = 'c:\\DEV\\{0}\\glassfish\\domains\\domain1\\config\\domain.xml'
 poolsForUpdate = { 'GLOBE_APP-Pool', 'GLOBE_LOG-Pool', 'GLOBE_READ-Pool' }
 
 instances = {
@@ -104,21 +106,21 @@ def changeDbProperty(jdbc, newInstance):
             changeDbPassword(prop, newInstance)
 
 def changeDbUser(prop, newInstance):
-    print 'Change user to {0}'.format(getUser(newInstance)) 
+    print 'Change user to {0}'.format(getUser(newInstance))
     prop.attributes.getNamedItem('value').value = getUser(newInstance)
 
 def changeDbUrl(prop, newInstance):
-    print 'Change url to {0}'.format(getUrl(newInstance)) 
+    print 'Change url to {0}'.format(getUrl(newInstance))
     prop.attributes.getNamedItem('value').value = getUrl(newInstance)
-    
+
 def changeDbPassword(prop, newInstance):
-    print 'Change password to {0}'.format(getPassword(newInstance)) 
+    print 'Change password to {0}'.format(getPassword(newInstance))
     prop.attributes.getNamedItem('value').value = getPassword(newInstance)
-    
+
 def getUser(newInstance):
     if newInstance in instances:
         return instances[newInstance]['user']
-    
+
 def getUrl(newInstance):
     if newInstance in instances:
         return instances[newInstance]['url']
@@ -156,12 +158,22 @@ def printCurrentConfig():
 def getDomainXmlPath():
     glassfishVersion = 'glassfish'
     # Windows CMD noch /bin/bash ! :(
-    #getBranchBash = subprocess.Popen('getBranch', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #autoBranch = getBranchBash.communicate()
-    #print 'Branch from bash: {0}'.format(autoBranch)
-    if len(sys.argv) == 3:
-        if (sys.argv[2] == 'master'):
-            glassfishVersion = ''.join([glassfishVersion, '-2.2.0'])
+    gitBranch = subprocess.Popen(split("git branch -vv"), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    gitBranches = gitBranch.communicate()[0]
+    match = re.search('\* .*\[([a-zA-Z0-9/_]*)\].*', gitBranches)
+    if match is None:
+        return glassfishVersion
+
+    pushBranch = re.search('.*/(.*)', match.group(1))
+    if pushBranch is None:
+        return glassfishVersion
+
+    pushBranch = pushBranch.group(1)
+    if ( len(sys.argv) == 3 and (sys.argv[2] == 'master') ) or pushBranch == 'master':
+        glassfishVersion = ''.join([glassfishVersion, '-2.2.0', '\\', '3.1.2-11_H01'])
+    else:
+        glassfishVersion = ''.join([glassfishVersion, '\\', '3.1.2-6_H08'])
+
     path = DOMAIN_XML.format(glassfishVersion)
     print '> domain.xml location {0}'.format(path)
     return path
@@ -172,7 +184,7 @@ def printInformationOnUnknownArguments():
     print ''
     print 'You have to give the name of the db instance!'
     printUsage()
-    
+
 if (len(sys.argv) != 2 and len(sys.argv) != 3):
     printInformationOnUnknownArguments()
     sys.exit(2)
@@ -182,7 +194,7 @@ if sys.argv[1] not in instances.keys():
     if len(sys.argv) == 2:
         sys.argv.append(sys.argv[1])
         print 'Using the parameter as branch information to display current configuration...'
-    
+
     printInformationOnUnknownArguments()
     sys.exit(2)
 
