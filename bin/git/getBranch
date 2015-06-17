@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function get_branch {
+  local branch=$(git status 2>/dev/null | sed -n 's/On branch \(.*\)/\1/p')
+  if [[ -z "$branch" ]]; then
+    echo "__detached__"
+  else
+    echo "$branch"
+  fi
+}
+
+function get_branch_improved {
+  local upstream="$(git branch -vv | sed -n 's/^\* .*\[\([a-zA-Z0-9\/_]*\).*$/\1/p' | sed -n 's/.*\/\(.*\)/\1/p')"
+  if [[ -z "$upstream" ]]; then
+    get_branch
+  else
+    echo "$upstream"
+  fi
+}
+
+get_branch_improved
