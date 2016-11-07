@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#options="--incognito"
+#options="--new-window"
+options=""
+
+proxy_auth_string=""
+if is_lht_proxy; then
+    proxy_auth_string="U 8 1 5 4 9 6 Tab s k e l e t o r Return"
+	options+=" --proxy-pac-url=http://inetprox.inet.cns.fra.dlh.de/lht.pac"
+fi
+
+options+=" $@"
+echo $options
+google-chrome-stable $options $@ &
+pid=$!
+
+if [ "$(xdotool search --onlyvisible --pid=$pid)" == "" ]; then
+    echo "Waiting for vivaldi to coming up..."
+    sleep 1
+fi
+
+sleep 1
+echo $proxy_auth_string
+echo "Auto typing proxy password..."
+for k in $proxy_auth_string; do
+    echo $k
+    xdotool search --onlyvisible --pid $pid windowactivate key "$k"
+done
+
+echo $pid

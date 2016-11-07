@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#options="--incognito"
+#options="--new-window"
+options=""
+
+tmp_profile_path="/tmp/vivaldi-profile/"
+if [ -d $tmp_profile_path ]; then
+    rm -rf $tmp_profile_path
+fi
+mkdir $tmp_profile_path
+rsync -av --delete --exclude="/Singleton*" --exclude="*Session*" --exclude="*Last*" ~/.config/vivaldi/ $tmp_profile_path
+options+=" --user-data-dir=$tmp_profile_path"
+
+echo $options
+vivaldi-stable $options "$1" &
+pid=$!
+echo $pid
+
+sleep 5
+echo "Fullscreen!"
+xdotool search --onlyvisible --pid $pid windowactivate key "ctrl+F11"

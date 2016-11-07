@@ -1,0 +1,15 @@
+#!/bin/bash
+
+workspace3=$(grep -m 1 \$ws_mail ~/.config/i3/config | cut -d'"' -f 2)
+
+echo $workspace3
+sleep 1
+
+i3-msg "workspace \"$workspace3\""
+sleep 1
+vivaldi-app-owa
+sleep 1
+vivaldi-app-slack
+sleep 1
+
+i3-msg "workspace \"$workspace3\"; layout tabbed"

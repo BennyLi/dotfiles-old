@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vivaldi-app --lht-proxy "https://app.napster.com/"

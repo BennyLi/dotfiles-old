@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vivaldi-app "https://nas.li.local:5001/"

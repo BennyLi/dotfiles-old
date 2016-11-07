@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vivaldi-app "https://iterahub.iteratec.de"
